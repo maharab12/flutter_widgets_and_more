@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main()=>runApp(Myapp());
 class Myapp extends StatelessWidget {
@@ -14,38 +13,17 @@ class Myapp extends StatelessWidget {
 }
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
+
   @override
   State<Homepage> createState() => _HomepageState();
 }
-class _HomepageState extends State<Homepage> {
-  var atobar = 0;
-  Load() async {
-    SharedPreferences pre = await SharedPreferences.getInstance();
-    setState(() {
-      atobar = pre.getInt("value") ?? 0;
-    });}
-  Increment() async {
-    SharedPreferences pre = await SharedPreferences.getInstance();
-    setState(() {
-      atobar++;
-      pre.setInt("value", atobar);
-    });}
-  @override
-  void initState() {
-    Load();
-    super.initState();
-  }
 
+class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text(
-          "You have clicked the item $atobar ", style: TextStyle(fontSize: 30),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: Increment,
+        child: Text("hi"),
       ),
     );
   }
