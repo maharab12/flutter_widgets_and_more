@@ -1,54 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:introduction_screen/introduction_screen.dart';
-import 'home.dart';
-void main(){
-  runApp(Myapp());
-}
+import 'package:shared_preferences/shared_preferences.dart';
 
+void main()=>runApp(Myapp());
 class Myapp extends StatelessWidget {
   const Myapp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home:Splash() ,
+      home: Homepage(),
     );
   }
 }
-
-class Splash extends StatefulWidget {
-  const Splash({super.key});
-
+class Homepage extends StatefulWidget {
+  const Homepage({super.key});
   @override
-  State<Splash> createState() => _SplashState();
+  State<Homepage> createState() => _HomepageState();
 }
-class _SplashState extends State<Splash> {
+class _HomepageState extends State<Homepage> {
+  var atobar = 0;
+  Load() async {
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    setState(() {
+      atobar = pre.getInt("value") ?? 0;
+    });}
+  Increment() async {
+    SharedPreferences pre = await SharedPreferences.getInstance();
+    setState(() {
+      atobar++;
+      pre.setInt("value", atobar);
+    });}
+  @override
+  void initState() {
+    Load();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return IntroductionScreen(pages: [
-      PageViewModel(title: "First",
-          body: "This is first desctiption",
-          image: Image.network("https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885_1280.jpg")
+    return Scaffold(
+      body: Center(
+        child: Text(
+          "You have clicked the item $atobar ", style: TextStyle(fontSize: 30),
+        ),
       ),
-      PageViewModel(
-          title: "First",
-          body: "This is first desctiption",
-          image:Image.network("https://cdn.pixabay.com/photo/2015/07/09/22/45/tree-838667_1280.jpg")
-
+      floatingActionButton: FloatingActionButton(
+        onPressed: Increment,
       ),
-      PageViewModel(
-          title: "First",
-          body: "This is first desctiption",
-
-          image: Image.network("https://cdn.pixabay.com/photo/2018/04/20/09/49/sky-3335585_1280.jpg")
-      ),
-    ],
-      onDone: (){Navigator.push(context, MaterialPageRoute(builder: (context)=>Homepage()));},
-      next: Icon(Icons.forward),
-
-      showSkipButton: true,
-      skip: Text("Skip"),
-      done: Text("Done"),);
+    );
   }
 }
-
