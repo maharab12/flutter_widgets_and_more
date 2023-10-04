@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:untitled/home.dart';
 
-void main()=>runApp(Myapp());
+
+void main() => runApp(Myapp());
+
 class Myapp extends StatelessWidget {
   const Myapp({super.key});
 
@@ -20,44 +21,28 @@ class Homepage extends StatefulWidget {
 }
 class _HomepageState extends State<Homepage> {
   @override
-  final _formkey = GlobalKey<FormState>();
+  final _key = GlobalKey<ScaffoldState>();
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Form(
-            key: _formkey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextFormField(
-                  validator: (value){
-                    if(value!.isEmpty){
-                      if(value.length<3) {
-                        return "please enter at least 3 wrod";
-                      }}},),
-                TextFormField(
-                  validator: (value){
-                    if(value!.isEmpty){
-                      return "Enter Your Phone Number";
-                    }
-                  },
-                ),
-                TextFormField(
-                  validator: (value){
-                    if(value!.isEmpty){
-                      return "Enter Your Age";
-                    }
-                  },
-                ),
-                ElevatedButton(onPressed: (){
-                  if(_formkey.currentState!.validate()){
-                    Navigator.push(context, CupertinoPageRoute(builder: (context)=>Hi()));
-                  }
-                },
-                    child: Text("Login"))
-              ],)
+
+        key: _key,
+      //we can use endDrawer for the derawer in the left sit
+        //endDrawer: Drawer(),
+        drawer: Drawer(
+          child: Column(
+            children: [])),
+        //it has a defautl icon but we will take a custom icon below
+        appBar: AppBar(
+          title: Text("Drawer"),
+          centerTitle: true,
+          leading: IconButton(
+            icon: Icon(Icons.arrow_forward),
+            onPressed: (){
+              _key.currentState?.openDrawer();
+            },
+          ),
         ),
-      ),
+        body: Center()
     );
   }
 }
