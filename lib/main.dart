@@ -34,6 +34,7 @@ class _SplashState extends State<Splash> {
           title: "First",
           body: "This is first desctiption",
           image:Image.network("https://cdn.pixabay.com/photo/2015/07/09/22/45/tree-838667_1280.jpg")
+
       ),
       PageViewModel(
           title: "First",
