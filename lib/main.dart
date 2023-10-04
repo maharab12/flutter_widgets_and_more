@@ -1,5 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:untitled/home.dart';
 
 void main()=>runApp(Myapp());
 class Myapp extends StatelessWidget {
@@ -18,34 +19,44 @@ class Homepage extends StatefulWidget {
   State<Homepage> createState() => _HomepageState();
 }
 class _HomepageState extends State<Homepage> {
-  var atobar = 0;
-  Load() async {
-    SharedPreferences pre = await SharedPreferences.getInstance();
-    setState(() {
-      atobar = pre.getInt("value") ?? 0;
-    });}
-  Increment() async {
-    SharedPreferences pre = await SharedPreferences.getInstance();
-    setState(() {
-      atobar++;
-      pre.setInt("value", atobar);
-    });}
   @override
-  void initState() {
-    Load();
-    super.initState();
-  }
-
-  @override
+  final _formkey = GlobalKey<FormState>();
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text(
-          "You have clicked the item $atobar ", style: TextStyle(fontSize: 30),
+        child: Form(
+            key: _formkey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextFormField(
+                  validator: (value){
+                    if(value!.isEmpty){
+                      if(value.length<3) {
+                        return "please enter at least 3 wrod";
+                      }}},),
+                TextFormField(
+                  validator: (value){
+                    if(value!.isEmpty){
+                      return "Enter Your Phone Number";
+                    }
+                  },
+                ),
+                TextFormField(
+                  validator: (value){
+                    if(value!.isEmpty){
+                      return "Enter Your Age";
+                    }
+                  },
+                ),
+                ElevatedButton(onPressed: (){
+                  if(_formkey.currentState!.validate()){
+                    Navigator.push(context, CupertinoPageRoute(builder: (context)=>Hi()));
+                  }
+                },
+                    child: Text("Login"))
+              ],)
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: Increment,
       ),
     );
   }
