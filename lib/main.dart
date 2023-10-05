@@ -24,25 +24,44 @@ class _HomepageState extends State<Homepage> {
   final _key = GlobalKey<ScaffoldState>();
   Widget build(BuildContext context) {
     return Scaffold(
+        body: Column(
+          children:[
+            AspectRatio(
+            aspectRatio:1,
+            child: Container(
+              color: Colors.blueGrey,
+              child: FractionallySizedBox(
+                heightFactor: 0.5,
+                widthFactor: 0.5,
+                child: Container(
+                  color: Colors.yellow,
+                ),
+              ),
+                )),
+          FittedBox(
+            child: Row(
+              children: [
+                Container(
+                  height: 200,
+                  width: MediaQuery.of(context).size.width/3,
+                  color: Colors.red,
+                ),Container(
+                  height: 200,
+                  width: MediaQuery.of(context).size.width/3,
+                  color: Colors.green,
+                ),Container(
+                  height: 200,
+                  width: MediaQuery.of(context).size.width/2,
+                  color: Colors.yellow,
+                ),
 
-        key: _key,
-      //we can use endDrawer for the derawer in the left sit
-        //endDrawer: Drawer(),
-        drawer: Drawer(
-          child: Column(
-            children: [])),
-        //it has a defautl icon but we will take a custom icon below
-        appBar: AppBar(
-          title: Text("Drawer"),
-          centerTitle: true,
-          leading: IconButton(
-            icon: Icon(Icons.arrow_forward),
-            onPressed: (){
-              _key.currentState?.openDrawer();
-            },
+
+              ],
+            ),
+          )
+          ]
           ),
-        ),
-        body: Center()
+
     );
   }
 }
