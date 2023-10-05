@@ -25,7 +25,6 @@ class First_screen extends StatefulWidget {
   @override
   State<First_screen> createState() => _First_screenState();
 }
-
 class _First_screenState extends State<First_screen> {
   @override
   Widget build(BuildContext context) {
