@@ -21,28 +21,19 @@ class _HomepageState extends State<Homepage> {
   final _key = GlobalKey<ScaffoldState>();
   Widget build(BuildContext context) {
     return Scaffold(
-        body:LayoutBuilder(builder: (_,contraints){
-          if(contraints.maxWidth<480){
+        body:OrientationBuilder(builder: (_,orientation){
+          if(orientation==Orientation.portrait){
             return Container(
-              child: Center(
-                child: Text("Less then 480"),
-              ),
-            );
-          }else if(contraints.maxWidth>480&&contraints.maxWidth<800){
-            return Container(
-              child: Center(
-                child: Text("Less then 400"),
-              ),
+              color: Colors.yellow,
             );
           }else{
             return Container(
-              child: Center(
-                child: Text("grater than 800"),
-              ),
+              color: Colors.brown,
             );
           }
+        }
 
-        },)
+    )
 
     );
   }
