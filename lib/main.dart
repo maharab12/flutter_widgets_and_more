@@ -1,7 +1,6 @@
-import 'dart:async';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:untitled/languages.dart';
 
 void main() => runApp(Myapp());
 
@@ -10,49 +9,46 @@ class Myapp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: First_screen(),
+    return GetMaterialApp(
+      translations: languages(),
+      locale: Locale("bn_BD", "bn"),
+      fallbackLocale: Locale("en", "us"),
+      home: Hi(),
     );
   }
 }
 
-class First_screen extends StatefulWidget {
-  First_screen({Key? key}) : super(key: key);
+class Hi extends StatelessWidget {
+  Hi({Key? key});
 
-  @override
-  State<First_screen> createState() => _First_screenState();
-}
-class _First_screenState extends State<First_screen> {
-  Future checkConnection() async {
-    var connectivityResult = await (Connectivity().checkConnectivity());
-    if (connectivityResult == ConnectivityResult.mobile) {
-      await Fluttertoast.showToast(msg: "Connected with netwrok");
-    } else if (connectivityResult == ConnectivityResult.wifi) {
-      await Fluttertoast.showToast(msg: "Connected with wifi",fontSize: 40);
+  void changeLanguage() {
+    var currentLocale = Get.locale;
+    if (currentLocale == Locale("bn_BD", "bn")) {
+      Get.updateLocale(Locale("en", "us"));
     } else {
-      await Fluttertoast.showToast(msg: "Connection lost",fontSize: 20);
+      Get.updateLocale(Locale("bn_BD", "bn"));
     }
   }
-  StreamSubscription? subscription;
-  @override
-  void initState() {
-    subscription=Connectivity().onConnectivityChanged.listen((event) {checkConnection();});
-    super.initState();
-  }
-  @override
-  void dispose() {
-    subscription?.cancel();
-    super.dispose();
-  }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child:Container(
-            color: Colors.green,
-          ),
+      body: Padding(
+        padding: EdgeInsets.only(top: 30, left: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text("app_name".tr, style: TextStyle(fontSize: 35)),
+            Text("app_title".tr, style: TextStyle(fontSize: 35)),
+            TextButton(
+              onPressed: () {
+                changeLanguage();
+              },
+              child: Text("button".tr, style: TextStyle(fontSize: 25)),
+            )
+          ],
         ),
       ),
     );
-}}
+  }
+}
