@@ -1,5 +1,7 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 void main() => runApp(Myapp());
 
@@ -10,11 +12,6 @@ class Myapp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: First_screen(),
-      initialRoute: "/",
-      routes: {
-        "/first": (context) => First_screen(),
-        "/second": (context) => Second_screen(),
-      },
     );
   }
 }
@@ -26,45 +23,36 @@ class First_screen extends StatefulWidget {
   State<First_screen> createState() => _First_screenState();
 }
 class _First_screenState extends State<First_screen> {
+  Future checkConnection() async {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult == ConnectivityResult.mobile) {
+      await Fluttertoast.showToast(msg: "Connected with netwrok");
+    } else if (connectivityResult == ConnectivityResult.wifi) {
+      await Fluttertoast.showToast(msg: "Connected with wifi",fontSize: 40);
+    } else {
+      await Fluttertoast.showToast(msg: "Connection lost",fontSize: 20);
+    }
+  }
+  StreamSubscription? subscription;
   @override
+  void initState() {
+    subscription=Connectivity().onConnectivityChanged.listen((event) {checkConnection();});
+    super.initState();
+  }
+  @override
+  void dispose() {
+    subscription?.cancel();
+    super.dispose();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          //Navigator.pushNamed(context, "/second");
-          //we can also use push to navigate
-          //cupertinoPageRoute give scrollview
-          //Navigator.push(context, CupertinoPageRoute(builder: (context)=>Second_screen()));
-         // Navigator.push(context, MaterialPageRoute(builder: (context)=>Second_screen()));
-          //we can use pushReplacement which will go to the one way no like stack.
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Second_screen()));
-        },
-        child: Text("First_second"),
+      body: SafeArea(
+        child: Center(
+          child:Container(
+            color: Colors.green,
+          ),
+        ),
       ),
     );
-  }
-}
-
-class Second_screen extends StatefulWidget {
-  Second_screen({Key? key}) : super(key: key);
-
-  @override
-  State<Second_screen> createState() => _Second_screenState();
-}
-
-class _Second_screenState extends State<Second_screen> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          //Navigator.pushNamed(context, "/first");
-          //Navigator.push(context, CupertinoPageRoute(builder: (context)=>First_screen()));
-          //Navigator.push(context, MaterialPageRoute(builder: (context)=>First_screen()));
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>First_screen()));
-        },
-        child: Text("second"),
-      ),
-    );
-  }
-}
+}}
