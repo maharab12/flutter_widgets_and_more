@@ -1,54 +1,20 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:untitled/languages.dart';
 
-void main() => runApp(Myapp());
+import 'login.dart'; // Replace 'your_app_name' with your actual app name
 
-class Myapp extends StatelessWidget {
-  Myapp({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return GetMaterialApp(
-      translations: languages(),
-      locale: Locale("bn_BD", "bn"),
-      fallbackLocale: Locale("en", "us"),
-      home: Hi(),
-    );
-  }
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
 }
 
-class Hi extends StatelessWidget {
-  Hi({Key? key});
-
-  void changeLanguage() {
-    var currentLocale = Get.locale;
-    if (currentLocale == Locale("bn_BD", "bn")) {
-      Get.updateLocale(Locale("en", "us"));
-    } else {
-      Get.updateLocale(Locale("bn_BD", "bn"));
-    }
-  }
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.only(top: 30, left: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text("app_name".tr, style: TextStyle(fontSize: 35)),
-            Text("app_title".tr, style: TextStyle(fontSize: 35)),
-            TextButton(
-              onPressed: () {
-                changeLanguage();
-              },
-              child: Text("button".tr, style: TextStyle(fontSize: 25)),
-            )
-          ],
-        ),
-      ),
+    return MaterialApp(
+      title: "Flutter Demo",
+      home: LoginPage(),
     );
   }
 }
