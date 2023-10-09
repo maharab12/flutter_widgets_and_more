@@ -12,13 +12,7 @@ class Home extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Welcome, ${FirebaseAuth.instance.currentUser!.email}!"),
-            Text("Welcome, ${FirebaseAuth.instance.currentUser!.displayName}!"),
-            Container(
-              height: 100,
-              width: 100,
-              child: Image.network("${FirebaseAuth.instance.currentUser!.displayName}"),
-            )
+            Text("Sala vag")
           ],
         ),
       ),

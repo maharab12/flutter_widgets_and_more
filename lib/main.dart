@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -27,23 +28,58 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  Future signIn() async {
-    try {
-      final GoogleSignInAccount? googleSignInAccount = await GoogleSignIn().signIn();
-      final GoogleSignInAuthentication? googleSignInAuthentication = await googleSignInAccount?.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        idToken: googleSignInAuthentication?.idToken,
-        accessToken: googleSignInAuthentication?.accessToken,
-      );
-      final UserCredential authResult = await FirebaseAuth.instance.signInWithCredential(credential);
-      final User? user = authResult.user;
-      if (user != null) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
-      }
-    } catch (e) {
-      print("Error during sign-in: $e");
-      // Handle the error here
-    }
+  FirebaseAuth _auth = FirebaseAuth.instance;
+  TextEditingController pincontroller=TextEditingController();
+  TextEditingController phonecontroller=TextEditingController();
+
+  phoneAuth() async {
+    await _auth.verifyPhoneNumber(
+      phoneNumber: phonecontroller.text,
+        timeout: Duration(seconds: 40),
+         verificationCompleted: (PhoneAuthCredential credential)async{
+        var result= await _auth.signInWithCredential(credential);
+        User? user=result.user;
+        if(user!=null){
+          Navigator.push(context, CupertinoPageRoute(builder: (context)=>Home()));
+        }
+        },
+        verificationFailed: (FirebaseAuthException exception){
+        return print(exception);
+        },
+      // if verifyPhoneNumber doesn't work means automaticly doesn't work then the manual code or below function will work
+
+        codeSent: (String verificationId, int? resendToken){
+        showDialog(context: context, builder: (context){
+          return AlertDialog(
+            title: Text("Enter the code"),
+            content: Column(
+              children: [
+                TextField(
+                  controller: pincontroller,
+                ),
+                ElevatedButton(onPressed: () async {
+                  var smscode= pincontroller.text;
+                  PhoneAuthCredential phoneauthcredential = PhoneAuthProvider.credential(
+                      verificationId: verificationId,
+                      smsCode: smscode,);
+                  var result= await _auth.signInWithCredential(phoneauthcredential);
+                  User? user=result.user;
+                  if(user!=null){
+                    Navigator.push(context, CupertinoPageRoute(builder: (context)=>Home()));
+                  }
+
+
+                }, child: Text("Send"))
+              ],
+            ),
+          );
+        });
+        },
+        codeAutoRetrievalTimeout: (String verificationId){
+
+        },
+
+    );
   }
 
   @override
@@ -51,21 +87,32 @@ class _HomepageState extends State<Homepage> {
     return Scaffold(
       body: Center(
         child: Padding(
-          padding: EdgeInsets.all(15),
+          padding: EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                "Sign Up",
+              const Text(
+                "Phone auth",
                 style: TextStyle(
                   fontSize: 35,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 40),
+              TextFormField(
+                controller: phonecontroller,
+                  decoration: InputDecoration(
+                      labelText: "Phone Number",
+                      enabledBorder:OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.greenAccent,width: 5)
+                  )),
+                  onChanged: (value) {
+                    setState(() {});
+                  }),
+              SizedBox(height: 50,),
               ElevatedButton(
                 onPressed: () {
-                  signIn();
+                  phoneAuth();
                 },
                 child: Text("Sign up"),
               )
