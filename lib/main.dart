@@ -117,6 +117,29 @@ return GestureDetector(
 
 
 
+import 'package:flutter/material.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+class AnotherPage extends StatefulWidget {
+  final String title;
+  AnotherPage(this.title);
+
+  @override
+  State<AnotherPage> createState() => _AnotherPageState();
+}
+
+class _AnotherPageState extends State<AnotherPage> {
+  final videourl="https://youtu.be/YMx8Bbev6T4";
+  late YoutubePlayerController _controller;
+  @override
+  void initState() {
+    final videoId=YoutubePlayer.convertUrlToId(videourl);
+    _controller= YoutubePlayerController(initialVideoId: videoId??'');
+    flags:YoutubePlayerFlags(
+      autoPlay: false
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -139,6 +162,12 @@ return GestureDetector(
           ],
           ),
         ],
+      )
+    );
+  }
+}
+
+
       )
     );
   }
